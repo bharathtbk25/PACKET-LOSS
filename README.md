@@ -164,7 +164,6 @@ We basically wait for the stream to come back. If it is the case, display recove
 We wait until the trip stats are stabilised, which should indicate that the TCP stack has resent all its packets, and we are in a stable phase again. (actually, after thinking again, it may be that my algorithm decide too rapidly that we are back.. Whatever, not that important...)
 We print then a full_recover message, and go back in state 1. 
 
-
 ## 4. Issues
 
 Potential bug: I don't know how TCP reacts to dropped packets, especially if it gather all what has been sent from the application layer and build a big TCP packet to send everything at once. In that case, my programm my suffer. Receive buffer is 100 bytes, we should be enough to eat up to 5 packets. Only the first one will be considered for the stat, but should be ok to calculate recovery time (there's no state synchronised between the two programs as in the udp version). We may have an issue if the next segment doesn't start nicely on a message boundary. In that case, the trip time calculation will be wrong, potentially corrupting a bin. It should take more than 3 secs to reset the stat by valid packets, potentially delaying full recovery by that time. (not critical)
